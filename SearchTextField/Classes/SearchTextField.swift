@@ -14,10 +14,10 @@ open class SearchTextField: UITextField {
     // Public interface
     
     /// Maximum number of results to be shown in the suggestions list
-    open var maxNumberOfResults = 0
+    @objc open var maxNumberOfResults = 0
     
     /// Maximum height of the results list
-    open var maxResultsListHeight = 0
+    @objc open var maxResultsListHeight = 0
     
     /// Indicate if this field has been interacted with yet
     open var interactedWith = false
@@ -29,7 +29,7 @@ open class SearchTextField: UITextField {
     open var typingStoppedDelay = 0.8
     
     /// Set your custom visual theme, or just choose between pre-defined SearchTextFieldTheme.lightTheme() and SearchTextFieldTheme.darkTheme() themes
-    open var theme = SearchTextFieldTheme.lightTheme() {
+    @objc open var theme = SearchTextFieldTheme.lightTheme() {
         didSet {
             tableView?.reloadData()
             
@@ -48,7 +48,7 @@ open class SearchTextField: UITextField {
     }
     
     /// Show the suggestions list without filter when the text field is focused
-    open var startVisible = false
+    @objc open var startVisible = false
     
     /// Show the suggestions list without filter even if the text field is not focused
     open var startVisibleWithoutInteraction = false {
@@ -60,12 +60,12 @@ open class SearchTextField: UITextField {
     }
     
     /// Set an array of SearchTextFieldItem's to be used for suggestions
-    open func filterItems(_ items: [SearchTextFieldItem]) {
+    @objc open func filterItems(_ items: [SearchTextFieldItem]) {
         filterDataSource = items
     }
     
     /// Set an array of strings to be used for suggestions
-    open func filterStrings(_ strings: [String]) {
+    @objc open func filterStrings(_ strings: [String]) {
         var items = [SearchTextFieldItem]()
         
         for value in strings {
@@ -76,7 +76,7 @@ open class SearchTextField: UITextField {
     }
     
     /// Closure to handle when the user pick an item
-    open var itemSelectionHandler: SearchTextFieldItemHandler?
+    @objc open var itemSelectionHandler: SearchTextFieldItemHandler?
     
     /// Closure to handle when the user stops typing
     open var userStoppedTypingHandler: (() -> Void)?
@@ -435,6 +435,9 @@ open class SearchTextField: UITextField {
     fileprivate func filter(forceShowAll addAll: Bool) {
         clearResults()
         
+        let useCurrentTextItem = SearchTextFieldItem(title: "Use: " + text!);
+        filteredResults.append(useCurrentTextItem);
+        
         if text!.count < minCharactersNumberToStartFiltering {
             return
         }
@@ -610,7 +613,7 @@ extension SearchTextField: UITableViewDelegate, UITableViewDataSource {
 ////////////////////////////////////////////////////////////////////////
 // Search Text Field Theme
 
-public struct SearchTextFieldTheme {
+@objcMembers public class SearchTextFieldTheme : NSObject {
     public var cellHeight: CGFloat
     public var bgColor: UIColor
     public var borderColor: UIColor
@@ -643,7 +646,7 @@ public struct SearchTextFieldTheme {
 ////////////////////////////////////////////////////////////////////////
 // Filter Item
 
-open class SearchTextFieldItem {
+@objcMembers open class SearchTextFieldItem : NSObject {
     // Private vars
     fileprivate var attributedTitle: NSMutableAttributedString?
     fileprivate var attributedSubtitle: NSMutableAttributedString?
