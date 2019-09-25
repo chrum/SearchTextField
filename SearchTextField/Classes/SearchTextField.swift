@@ -80,6 +80,11 @@ open class SearchTextField: UITextField {
 
     /// Closure to handle when the user pick an item
     @objc open var itemSelectionHandler: SearchTextFieldItemHandler?
+    
+    /// Handler for user picks... BUT with only title text passed down
+    /// i need this for my {N} plugin as the original handler is passing down to {N}  empty NSObjects for some reason
+    /// ehh no idea why hence this solutions...
+    @objc open var itemSelectionTextHandler: SearchTextFieldTextHandler?
 
     /// Closure to handle when the user stops typing
     open var userStoppedTypingHandler: (() -> Void)?
@@ -614,6 +619,11 @@ extension SearchTextField: UITableViewDelegate, UITableViewDataSource {
             itemSelectionHandler!(filteredResults, index)
         }
         
+        if itemSelectionTextHandler != nil {
+            let index = indexPath.row
+            itemSelectionTextHandler!(filteredResults[index].title);
+        }
+        
         clearResults()
     }
 }
@@ -680,6 +690,7 @@ extension SearchTextField: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+public typealias SearchTextFieldTextHandler = (_ title: String) -> Void
 public typealias SearchTextFieldItemHandler = (_ filteredResults: [SearchTextFieldItem], _ index: Int) -> Void
 
 ////////////////////////////////////////////////////////////////////////
